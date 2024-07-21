@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=0.8">
+
+  <link rel="icon" href="./images/favicon.ico">
+
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <script src="script.js" defer></script>
+
+  <title>Track Builder</title>
+</head>
+
+<body id="body">
+  <h1>レールループ設計ツール</h1>
+
+  <p class="p3 gray">(Last Update: 2024/Jul/21)</p><br><br>
+
+  <hr>
+  <div id="canvasWrapper">
+    <canvas id="grid" width="320" height="320"></canvas>
+    <canvas id="rails" width="320" height="320"></canvas>
+    <canvas id="select" width="320" height="320"></canvas>
+    <canvas id="listener" width="320" height="320"></canvas>
+  </div><br>
+
+  <button class="buttonMode" onclick="changeMode(this)">
+    <img src="./images/modes/touch.png" alt="Touch Mode">
+  </button>
+  <button class="buttonMode" onclick="changeMode(this)">
+    <img src="./images/modes/straight.png" alt="Straight Track">
+  </button>
+  <button class="buttonMode" onclick="changeMode(this)">
+    <img src="./images/modes/diagonal.png" alt="Diagonal Track">
+  </button>
+  <button class="buttonMode" onclick="changeMode(this)">
+    <img src="./images/modes/curved.png" alt="Curved Track">
+  </button>
+  <button class="buttonMode" onclick="changeMode(this)">
+    <img src="./images/modes/eraser.png" alt="Erase Mode">
+  </button><br>
+
+  <button id="buttonLeft" class="buttonFeature" onclick="rotateRailImage({deltaY: -1})">
+    <img src="./images/features/left.png" alt="Spin to the Left">
+  </button>
+  <button id="buttonRight" class="buttonFeature" onclick="rotateRailImage({deltaY: 1})">
+    <img src="./images/features/right.png" alt="Spin to the Right">
+  </button>
+  <button id="buttonUndo" class="buttonFeature" onclick="restoreData()" disabled>
+    <img src="./images/features/undo.png" alt="Undo">
+  </button>
+  <button id="buttonReset" class="buttonFeature" onclick="resetData()">
+    <img src="./images/features/reset.png" alt="Reset Tracks">
+  </button><br>
+
+  <button id="buttonCalc" onclick="calcPeriod()">周期を計算</button>
+
+  <span class="result">
+    <p class="bold">周期[f]:</p>
+    <p id="resultPeriod"></p>
+  </span>
+
+  <footer>
+    <p class="p2">Created by <a href="https://x.com/Shamoji_SMM">Shamoji</a></p>
+  </footer>
+
+</body>
+</html>
