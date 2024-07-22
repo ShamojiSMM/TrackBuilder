@@ -1,14 +1,13 @@
+document.oncontextmenu = () => { return false; }
+
 var canvases = [grid, rails, select, listener];
 
 var gridCtx = grid.getContext("2d");
 var railsCtx = rails.getContext("2d");
 var selectCtx = select.getContext("2d");
 
-var gridNum = 18;
-var cellSize = 22;
+var [gridNum, cellSize] = [18, 25];
 var canvasSize = gridNum * cellSize;
-
-document.oncontextmenu = () => { return false; }
 
 canvasWrapper.style.height = `${canvasSize}px`;
 canvases.forEach(canvas => {
@@ -21,6 +20,7 @@ selectCtx.fillStyle = "rgba(96, 114, 247, 0.3)";
 grid.style.backgroundColor = "#000";
 var selectedButtonModeColor = "#9effba";
 var markButtonFeatureColor = "#b3cfff";
+var selectedCursorColor = "#ffe25e";
 
 railsCtx.imageSmoothingEnabled = false;
 
@@ -76,6 +76,8 @@ var joints = ["connection", "corner"];
 var straights = ["middle", "connection"];
 
 var modes = ["touch", "straight", "diagonal", "curved", "eraser"];
+
+var isCursor = true;
 
 function drawGrid() {
   for (var x = 0; x < canvasSize; x += cellSize) {
@@ -160,11 +162,24 @@ function changeMode(button) {
   });
 
   mode = modes[modeIndex];
-  modeImage.src = `./images/modes/${mode}.png`;
+  modeDir = 0;
 
   button.style.backgroundColor = selectedButtonModeColor;
 
-  modeDir = 0;
+  var imageSrc = `./images/modes/${mode}.png`;
+
+  if (isRailIndex(modeIndex)) {
+    currentImage.src = imageSrc;
+    currentImage.style.display = "block";
+    currentImage.style.transform = "rotate(0)";
+
+  } else {
+    currentImage.style.display = "none";
+  }
+
+  if (!isCursor) return;
+
+  modeImage.src = imageSrc;
   modeImage.style.transform = "rotate(0)";
 
   if (isMouseOver) {
@@ -191,7 +206,25 @@ document.addEventListener("keydown", event => {
   };
 });
 
-buttonModes[0].click();
+changeMode(buttonModes[0]);
+
+function changePointer(id) {
+  isCursor = id == "buttonCursor";
+
+  buttonCursor.style.backgroundColor = isCursor ? selectedCursorColor : "";
+  buttonTap.style.backgroundColor = isCursor ? "" : selectedCursorColor;
+
+  if (isCursor) {
+    modeImage.src = `./images/modes/${mode}.png`;
+    modeImage.style.transform = "rotate(0)";
+
+  } else {
+    removeModeImage();
+    isMouseOver = false;
+  }
+}
+
+changePointer("buttonCursor");
 
 function getCellObject(cell, center) {
   var [x, y] = center ? [cell[0] + center[0], cell[1] + center[1]] : cell;
@@ -210,7 +243,7 @@ function getCos(direction) {
 
 var isClicking = false;
 
-listener.addEventListener("mousedown", event => {
+listener.addEventListener("pointerdown", event => {
   isClicking = true;
 
   var isRail = isRailIndex(modeIndex);
@@ -320,7 +353,7 @@ listener.addEventListener("mousedown", event => {
     drawSelects([origin], center);
   }
 
-  document.addEventListener("mouseup", () => {
+  var upProcess = () => {
     isClicking = false;
 
     var offset = cellSize / 2;
@@ -498,7 +531,17 @@ listener.addEventListener("mousedown", event => {
         setInterval(() => clearSelects(rotated, railCenter), 50);
       }
     }
-  }, {once: true});
+
+    eventTypes.forEach(eventType => {
+      document.removeEventListener(eventType, upProcess);
+    });
+  }
+
+  var eventTypes = ["pointerup", "touchend"];
+
+  eventTypes.forEach(eventType => {
+    document.addEventListener(eventType, upProcess, {once: true});
+  });
 });
 
 function drawPart(image, xPos, yPos, offset, dir, isReverse) {
@@ -543,6 +586,8 @@ function removeModeImage() {
 var isMouseOver = false;
 
 listener.addEventListener("mouseenter", () => {
+  if (!isCursor) return;
+
   isMouseOver = true;
   createModeImage();
 
@@ -550,6 +595,8 @@ listener.addEventListener("mouseenter", () => {
 });
 
 listener.addEventListener("mouseleave", () => {
+  if (!isCursor) return;
+
   isMouseOver = false;
   removeModeImage();
 
@@ -559,6 +606,7 @@ listener.addEventListener("mouseleave", () => {
 var modeDir = 0;
 
 document.addEventListener("wheel", event => {
+  if (!isCursor) return;
   if (isMouseOver) rotateRailImage(event, true);
 });
 
@@ -572,7 +620,9 @@ function rotateRailImage(event, isWheel) {
   var rotation = deltaY > 0 ? 1 : 3;
   modeDir = (modeDir + rotation) % 4;
 
-  modeImage.style.transform = `rotate(${modeDir / 4}turn)`;
+  var rotate = `rotate(${modeDir / 4}turn)`;
+  modeImage.style.transform = rotate;
+  currentImage.style.transform = rotate;
 
   if (isWheel) markButtonFeature(rotation == 1 ? "Right" : "Left");
 }
@@ -616,18 +666,18 @@ function restoreData(isSortcut) {
   buttonUndo.disabled = true;
 }
 
-document.querySelectorAll(".buttonMode").forEach(button =>{
+document.querySelectorAll(
+  ".buttonMode, .buttonFeature, .buttonPointer"
+).forEach(button =>{
   button.title = button.children[0].alt;
 });
 
 document.querySelectorAll(".buttonFeature").forEach(button => {
-  button.title = button.children[0].alt;
-
-  button.addEventListener("mousedown", () => {
+  button.addEventListener("pointerdown", () => {
     var style = button.style;
     style.backgroundColor = markButtonFeatureColor;
 
-    document.addEventListener("mouseup", () => {
+    document.addEventListener("pointerup", () => {
       style.backgroundColor = "";
     });
   });
@@ -641,7 +691,11 @@ function resetData() {
   clearCanvas(railsCtx);
   resetRailCells();
 
-  resultPeriod.textContent = "";
+  displayPeriod("");
+}
+
+function displayPeriod(value) {
+  resultPeriod.textContent = value;
 }
 
 function getNextObject(obj, center, lastType, lastDir) {
@@ -708,7 +762,7 @@ function calcPeriod() {
   }
 
   if (!startIndexes.length) {
-    resultPeriod.textContent = "";
+    displayPeriod("");
     return;
   }
 
@@ -791,12 +845,36 @@ function calcPeriod() {
     }
 
     isError = false;
-    resultPeriod.textContent = period;
+    displayPeriod(period);
   }
 
   if (isError) {
-    resultPeriod.textContent = "";
+    displayPeriod("");
 
     alert("軌道が無効か大きすぎます。");
   }
+}
+
+var partNames = [
+  "arc",
+  "arcMiddle",
+  "closeD",
+  "closeS",
+  "connectionDD",
+  "connectionSS",
+  "cornerDD",
+  "cornerSDa",
+  "cornerSDo",
+  "cornerSS",
+  "middleD",
+  "middleS",
+  "openD",
+  "openS"
+];
+
+window.onload = () => {
+  partNames.forEach(name => {
+    var pre = document.createElement("img");
+    pre.src = `./images/parts/${name}.png`;
+  });
 }
