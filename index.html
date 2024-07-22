@@ -16,7 +16,7 @@
 <body id="body">
   <h1>レールループ設計ツール</h1>
 
-  <p class="p3 gray">(Last Update: 2024/Jul/21)</p><br><br>
+  <p class="p3 gray">(Last Update: 2024/Jul/22)</p>
 
   <hr>
   <div id="canvasWrapper">
@@ -26,41 +26,52 @@
     <canvas id="listener" width="320" height="320"></canvas>
   </div><br>
 
-  <button class="buttonMode" onclick="changeMode(this)">
+  <button class="buttonMode" onpointerup="changeMode(this)">
     <img src="./images/modes/touch.png" alt="Touch Mode">
   </button>
-  <button class="buttonMode" onclick="changeMode(this)">
+  <button class="buttonMode" onpointerup="changeMode(this)">
     <img src="./images/modes/straight.png" alt="Straight Track">
   </button>
-  <button class="buttonMode" onclick="changeMode(this)">
+  <button class="buttonMode" onpointerup="changeMode(this)">
     <img src="./images/modes/diagonal.png" alt="Diagonal Track">
   </button>
-  <button class="buttonMode" onclick="changeMode(this)">
+  <button class="buttonMode" onpointerup="changeMode(this)">
     <img src="./images/modes/curved.png" alt="Curved Track">
   </button>
-  <button class="buttonMode" onclick="changeMode(this)">
+  <button class="buttonMode" onpointerup="changeMode(this)">
     <img src="./images/modes/eraser.png" alt="Erase Mode">
-  </button><br>
+  </button>
 
-  <button id="buttonLeft" class="buttonFeature" onclick="rotateRailImage({deltaY: -1})">
+  <div id="currentRail">
+    <img id="currentImage" src="./images/modes/curved.png" alt="Current Track"><br>
+  </div><br>
+
+  <button id="buttonLeft" class="buttonFeature" onpointerup="rotateRailImage({deltaY: -1})">
     <img src="./images/features/left.png" alt="Spin to the Left">
   </button>
-  <button id="buttonRight" class="buttonFeature" onclick="rotateRailImage({deltaY: 1})">
+  <button id="buttonRight" class="buttonFeature" onpointerup="rotateRailImage({deltaY: 1})">
     <img src="./images/features/right.png" alt="Spin to the Right">
   </button>
-  <button id="buttonUndo" class="buttonFeature" onclick="restoreData()" disabled>
+  <button id="buttonUndo" class="buttonFeature" onpointerup="restoreData()" disabled>
     <img src="./images/features/undo.png" alt="Undo">
   </button>
-  <button id="buttonReset" class="buttonFeature" onclick="resetData()">
+  <button id="buttonReset" class="buttonFeature" onpointerup="resetData()">
     <img src="./images/features/reset.png" alt="Reset Tracks">
   </button><br>
 
-  <button id="buttonCalc" onclick="calcPeriod()">周期を計算</button>
+  <button id="buttonCalc" onpointerup="calcPeriod()">周期を計算</button>
 
   <span class="result">
     <p class="bold">周期[f]:</p>
     <p id="resultPeriod"></p>
-  </span>
+  </span><br>
+
+  <button id="buttonCursor" class="buttonPointer" onpointerup="changePointer(this.id)">
+    <img src="./images/pointers/cursor.png" alt="Cursor (for Mouse)">
+  </button>
+  <button id="buttonTap" class="buttonPointer" onpointerup="changePointer(this.id)">
+    <img src="./images/pointers/tap.png" alt="Tap (for Mobile)">
+  </button>
 
   <footer>
     <p class="p2">Created by <a href="https://x.com/Shamoji_SMM">Shamoji</a></p>
