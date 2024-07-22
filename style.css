@@ -17,10 +17,6 @@ h1 {
   margin-bottom: 14px;
 }
 
-hr {
-  margin-top: -18px;
-}
-
 p {
   display: inline;
 }
@@ -48,6 +44,7 @@ p {
 #canvasWrapper {
   position: relative;
   height: 320px;
+  margin-bottom: -10px;
 }
 
 #canvasWrapper canvas {
@@ -70,7 +67,7 @@ p {
 .buttonMode {
   width: 60px;
   height: 60px;
-  border-radius: 10px;
+  margin-top: 0px;
 }
 
 .buttonMode img {
@@ -79,18 +76,36 @@ p {
   pointer-events: none;
 }
 
+#currentRail {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  margin-top: 10px;
+  margin-left: 20px;
+  position: absolute;
+  background-color: rgba(96, 114, 247, 0.2);
+  border-radius: 20%;
+}
+
+#currentRail img {
+  image-rendering: pixelated;
+  width: 80%;
+  pointer-events: none;
+  margin-top: 10%;
+  margin-left: 10%;
+}
+
 .buttonFeature {
   width: 60px;
   height: 50px;
-  border-radius: 10px;
   margin-top: 16px;
-  margin-right: 16px;
+  margin-right: 10px;
 }
 
 .buttonFeature img {
   image-rendering: pixelated;
   width: 80%;
-  margin-top: 6px;
+  margin-top: 12%;
   pointer-events: none;
 }
 
@@ -104,6 +119,19 @@ p {
   font-size: 14px;
   margin-top: 16px;
   margin-right: 16px;
+}
+
+.buttonPointer {
+  width: 40px;
+  height: 40px;
+  margin-top: 50px;
+}
+
+.buttonPointer img {
+  image-rendering: pixelated;
+  width: 100%;
+  margin-top: 14%;
+  pointer-events: none;
 }
 
 footer {
