@@ -79,6 +79,10 @@ var modes = ["touch", "straight", "diagonal", "curved", "eraser"];
 
 var isCursor = true;
 
+document.addEventListener("touchstart", () => {
+  changePointer("buttonTouch");
+}, {once: true});
+
 function drawGrid() {
   for (var x = 0; x < canvasSize; x += cellSize) {
     for (var y = 0; y < canvasSize; y += cellSize) {
@@ -216,7 +220,6 @@ function changePointer(id) {
 
   if (isCursor) {
     modeImage.src = `./images/modes/${mode}.png`;
-    modeImage.style.transform = "rotate(0)";
 
   } else {
     removeModeImage();
