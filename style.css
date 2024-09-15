@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+html {
+  touch-action: manipulation;
+}
+
 body {
   white-space: nowrap;
   user-select: none;
