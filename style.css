@@ -138,3 +138,7 @@ footer {
   padding-top: 32px;
   text-align: right;
 }
+
+img[alt="Touch Mode"] {
+  opacity: 30%;
+}
