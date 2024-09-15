@@ -198,8 +198,8 @@ document.addEventListener("keydown", event => {
   var key = event.key;
   if (key == modeIndex + 1) return;
 
-  if (1 <= key && key <= buttonModes.length) {
-    buttonModes[key - 1].click();
+  if (2 <= key && key <= buttonModes.length) {
+    changeMode(buttonModes[key - 1]);
   }
 });
 
@@ -797,11 +797,6 @@ function calcPeriod() {
 
   var straightLength = 0;
   var count = 0;
-
-  console.log(startIndexes);
-  console.log(startObj);
-  console.log(preType);
-  console.log(preDir);
 
   calc: {
     while (true) {
