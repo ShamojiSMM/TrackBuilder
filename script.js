@@ -210,7 +210,7 @@ document.addEventListener("keydown", event => {
   };
 });
 
-changeMode(buttonModes[0]);
+changeMode(buttonModes[1]);
 
 function changePointer(id) {
   isCursor = id == "buttonCursor";
